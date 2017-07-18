@@ -6,3 +6,4 @@ Version: 1.0
 OrchardVersion: 1.4
 Description: Orchard Webshop Module Demo
 Category: Webshop
+Dependencies: Orchard.Projections, Orchard.Forms, Orchard.Resources
