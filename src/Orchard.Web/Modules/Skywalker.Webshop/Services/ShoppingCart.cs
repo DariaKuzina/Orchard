@@ -112,7 +112,7 @@ namespace Skywalker.Webshop.Services
             return Subtotal() * _taxRate;
         }
 
-        private void Clear()
+        public void Clear()
         {
             ItemsInternal.Clear();
             UpdateItems();
@@ -134,5 +134,21 @@ namespace Skywalker.Webshop.Services
 
             return query;
         }
-}
+
+        public void AddRange(IEnumerable<ShoppingCartItem> items)
+        {
+            foreach(var newItem in items)
+            {
+                var item = Items.SingleOrDefault(x => x.ProductId == newItem.ProductId);
+                if (item == null)
+                {
+                    ItemsInternal.Add(newItem);
+                }
+                else
+                {
+                    item.Quantity += newItem.Quantity;
+                }
+            }
+        }
+    }
 }

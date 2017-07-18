@@ -1,14 +1,11 @@
 ﻿using Orchard;
-using Orchard.ContentManagement;
 using Orchard.Mvc;
 using Orchard.Themes;
 using Skywalker.Webshop.Models;
 using Skywalker.Webshop.Services;
 using Skywalker.Webshop.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Skywalker.Webshop.Controllers
@@ -53,27 +50,11 @@ namespace Skywalker.Webshop.Controllers
             // Return a ShapeResult
             return new ShapeResult(this, shape);
         }
+        [HttpPost]
         public ActionResult Update(string command, UpdateShoppingCartItemViewModel[] items)
         {
+            UpdateShoppingCart(items);
 
-            // Loop through each posted item
-            foreach (var item in items)
-            {
-
-                // Select the shopping cart item by posted product ID
-                var shoppingCartItem = _shoppingCart.Items.SingleOrDefault(x => x.ProductId == item.ProductId);
-
-                if (shoppingCartItem != null)
-                {
-                    // Update the quantity of the shoppingcart item. If IsRemoved == true, set the quantity to 0
-                    shoppingCartItem.Quantity = item.IsRemoved ? 0 : item.Quantity < 0 ? 0 : item.Quantity;
-                }
-            }
-
-            // Update the shopping cart so that items with 0 quantity will be removed
-            _shoppingCart.UpdateItems();
-
-            // Return an action result based on the specified command
             switch (command)
             {
                 case "Checkout":
@@ -83,9 +64,23 @@ namespace Skywalker.Webshop.Controllers
                 case "Update":
                     break;
             }
-
-            // Return to Index if no command was specified
             return RedirectToAction("Index");
+        }
+
+        private void UpdateShoppingCart(IEnumerable<UpdateShoppingCartItemViewModel> items)
+        {
+
+            _shoppingCart.Clear();
+
+            if (items == null)
+                return;
+
+            _shoppingCart.AddRange(items
+                .Where(item => !item.IsRemoved)
+                .Select(item => new ShoppingCartItem(item.ProductId, item.Quantity < 0 ? 0 : item.Quantity))
+            );
+
+            _shoppingCart.UpdateItems();
         }
     }
 }

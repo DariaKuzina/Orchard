@@ -6,6 +6,9 @@ using System.Web;
 
 namespace Skywalker.Webshop
 {
+    /// <summary>
+    /// Automatically includes the dependency resources
+    /// </summary>
     public class ResourceManifest : IResourceManifestProvider
     {
         public void BuildManifests(ResourceManifestBuilder builder)
@@ -24,8 +27,12 @@ namespace Skywalker.Webshop
                   without having to reference "Webshop.Common" as well. Orchard will automatically include dependent resources.*/
                 .SetDependencies("Skywalker.Webshop.Common");
 
+            // Define the "shoppingcartwidget" style sheet 
+            manifest.DefineStyle("Skywalker.Webshop.ShoppingCartWidget").SetUrl("shoppingcartwidget.css").SetDependencies("Webshop.Common");
+
             // Define the "shoppingcart" script and set a dependency on the "jQuery" resource
             manifest.DefineScript("Skywalker.Webshop.ShoppingCart").SetUrl("shoppingcart.js").SetDependencies("jQuery");
+
         }
     }
 }

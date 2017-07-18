@@ -18,6 +18,8 @@ namespace Skywalker.Webshop.Services
 
         void Add(int productId, int quantity = 1);
 
+        void AddRange(IEnumerable<ShoppingCartItem> items);
+
         void Remove(int productId);
 
         ProductPart GetProduct(int productId);
@@ -33,5 +35,7 @@ namespace Skywalker.Webshop.Services
         int ItemCount();
 
         void UpdateItems();
+
+        void Clear();
     }
 }
